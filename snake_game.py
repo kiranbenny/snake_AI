@@ -25,7 +25,7 @@ BLUE2 = (0, 100, 255)
 BLACK = (0,0,0)
 
 BLOCK_SIZE = 20
-SPEED = 20
+SPEED = 50
 
 class SnakeGameAI:
 
@@ -61,7 +61,7 @@ class SnakeGameAI:
         if self.food in self.snake:
             self._place_food()
 
-    def play_step(sel, action):
+    def play_step(self, action):
 
         self.frame_iteration +=1
 

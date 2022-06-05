@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import torhc.nn.functional as F
+import torch.nn.functional as F
 import os
 
 class Linear_QNet(nn.Module):
@@ -30,9 +30,9 @@ class QTrainer:
         self.gamma = gamma
         self.model = model
         self.optimizer = optim.Adam(model.parameters(), lr = self.lr)
-        self.criterion = nn.MSEloss()
+        self.criterion = nn.MSELoss()
 
-    def _train_step(self, state, action, reward, next_state, done):
+    def train_step(self, state, action, reward, next_state, done):
         state = torch.tensor(state,dtype = torch.float)
         action = torch.tensor(action,dtype = torch.float)
         reward = torch.tensor(reward,dtype = torch.float)
@@ -47,7 +47,7 @@ class QTrainer:
 
         pred = self.model(state)
 
-        target = prd.clone()
+        target = pred.clone()
 
         for idx in range(len(done)):
             Q_new = reward[idx]

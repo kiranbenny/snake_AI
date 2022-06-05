@@ -77,7 +77,7 @@ class Agent :
             mini_sample = self.memory
 
         states, actions, rewards, next_states, dones = zip(*mini_sample)
-        self.trainer.train_step()
+        self.trainer.train_step(states, actions, rewards, next_states, dones)
 
     def train_short_memory(self,state,action,reward,next_state,done):
         self.trainer.train_step(state,action,reward,next_state,done)
@@ -105,22 +105,22 @@ def train():
     game = SnakeGameAI()
     while True:
         state_old = agent.get_state(game)
-        final_move = agent.get_action(state)
+        final_move = agent.get_action(state_old)
         reward, done, score = game.play_step(final_move)
         state_new = agent.get_state(game)
-        agent.train_short_memory(state, final_move, reward, state_new, done)
-        agent.remember(state, final_move, reward, state_new, done)
+        agent.train_short_memory(state_old, final_move, reward, state_new, done)
+        agent.remember(state_old, final_move, reward, state_new, done)
 
         if done:
             game.reset()
-            agent.n_game += 1
+            agent.n_games += 1
             agent.train_long_memory()
 
             if score > record:
                 record = score
                 agent.model.save()
 
-            print("Game", agent.n_game, "Score", score, "Record", record)
+            print("Game", agent.n_games, "Score", score, "Record", record)
 
             plot_score.append(score)
             total_score += score
